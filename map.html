@@ -4,7 +4,7 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Peta Putri</title>
+	<title>Ini Peta Interaktif</title>
 	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
 		integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
 	<style>
@@ -27,10 +27,38 @@
 		// yogyakarta
 		var map = L.map('map').setView([-7.797068, 110.370529], 13);
 
-		// basemap
-		var basemap = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+		// Basemaps
+		var openStreetMap = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 			maxZoom: 18
-		}).addTo(map);
+		});
+
+		var stamenTerrain = L.tileLayer('https://stamen-tiles.a.ssl.fastly.net/terrain/{z}/{x}/{y}.png', {
+			maxZoom: 18
+		});
+
+		var esriWorldImagery = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+			maxZoom: 18,
+			attribution: 'Esri World Imagery'
+		});
+
+		var cartoDBDark = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', {
+			maxZoom: 18,
+			subdomains: 'abcd',
+			attribution: 'CartoDB Dark'
+		});
+
+		// Default Basemap
+		openStreetMap.addTo(map);
+
+		// Basemap Control
+		var basemaps = {
+			"OpenStreetMap": openStreetMap,
+			"Esri World Imagery": esriWorldImagery,
+			"CartoDB Dark": cartoDBDark
+		};
+
+		L.control.layers(basemaps).addTo(map);
+
 
 		// Export Button
 		var showExport = '<button onclick="loadlayer()" title="Refresh map" class="">reload</button>';
@@ -55,7 +83,7 @@
 					});
 				},
 			});
-			$.getJSON("https://script.google.com/macros/s/AKfycbzGt-CzoGGG1Rp9c1tZlbEA-z4o_cjLPPHhgW7k4R0BZdICQnnMJWXGolHC0QxObOfo/exec", function (data) {
+			$.getJSON("https://script.google.com/macros/s/AKfycby0MH_NZIJmFYwwFpEFrykNuT6QB3Ht-v21GlaRugxFDv6CA4iXwbuPpzxlMMF6Wod1/exec", function (data) {
 				point.addData(data);
 				map.addLayer(point);
 				map.fitBounds(point.getBounds());
